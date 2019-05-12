@@ -10,26 +10,23 @@ public class Siguiente : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int[,] fichasjugador = null;
+        int[,,] fichasjugador = null;
         int totalFichasAsignadas = 0;
-        if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador1")
-        {
-            fichasjugador = FichaSeleccionada.GetFichasJugador1();
-        }
-        if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
-        {
-            fichasjugador = FichaSeleccionada.GetFichasJugador2();
-        }
+        fichasjugador = FichaSeleccionada.GetFichasJugadores();
 
         for (int i = 0; i < 9; i++)
         {
-            if (fichasjugador[i, 3] > 0)
+            if (fichasjugador[FichaSeleccionada.GetJugador(), i, 0] > 0)
             {
                 totalFichasAsignadas ++;
             }
+            if (fichasjugador[FichaSeleccionada.GetJugador(), i, 1] > 0)
+            {
+                totalFichasAsignadas++;
+            }
         }
 
-        if (totalFichasAsignadas > 8)
+        if (totalFichasAsignadas > 17)
         {
             this.GetComponent<Button>().interactable = true;
         }
@@ -54,16 +51,16 @@ public class Siguiente : MonoBehaviour
         foreach (GameObject ficha in fichas)
         {
             // recorremos todas las fichas quitando el elemento y la selección
-            this.QuitaMaterial(ficha);
-            this.PintaBlanco(ficha);
+            CambiaObjeto.QuitaMaterial(ficha);
+            CambiaObjeto.PintaBlanco(ficha);
         }
 
         // Inicializamos el elemento seleccionado
         ElementoSeleccionado.SetElementoSeleccionado(0);
         // Limpiamos la selección de elemento
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
 
     }
 
@@ -81,52 +78,17 @@ public class Siguiente : MonoBehaviour
         foreach (GameObject ficha in fichas)
         {
             // recorremos todas las fichas quitando el elemento y la selección
-            this.QuitaMaterial(ficha);
-            this.PintaGris(ficha);
+            CambiaObjeto.QuitaMaterial(ficha);
+            CambiaObjeto.PintaGris(ficha);
         }
 
         // Inicializamos el elemento seleccionado
         ElementoSeleccionado.SetElementoSeleccionado(0);
         // Limpiamos la selección de elemento
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
 
     }
 
-    // Quita el material que hace referencia al elemento de un objeto
-    private void QuitaMaterial(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = null;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color blanco
-    private void PintaBlanco(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.white;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color gris
-    private void PintaGris(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.grey;
-            r.material = m;
-        }
-    }
 }

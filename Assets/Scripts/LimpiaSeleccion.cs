@@ -9,6 +9,10 @@ public class LimpiaSeleccion : MonoBehaviour
     public void VolverMenu()
     {
         // Pone a 0 todos los valores de las fichas de los jugadores
+        FichaSeleccionada.SetCara(0);
+        FichaSeleccionada.InicializaFichasJugador1();
+        FichaSeleccionada.InicializaFichasJugador2();
+        FichaSeleccionada.SetCara(1);
         FichaSeleccionada.InicializaFichasJugador1();
         FichaSeleccionada.InicializaFichasJugador2();
         // Indica como desmarcadas todas las fichas y elementos
@@ -21,7 +25,7 @@ public class LimpiaSeleccion : MonoBehaviour
     {
         GameObject[] fichas;
 
-        // Pone a 0 todos los valores de las fichas del jugador 1
+        // Pone a 0 los valores de las fichas del jugador 1 de la cara actual
         FichaSeleccionada.InicializaFichasJugador1();
         // Indica como desmarcadas todas las fichas del jugador 1
         FichaSeleccionada.InicializaFichasSeleccionadas();
@@ -32,16 +36,16 @@ public class LimpiaSeleccion : MonoBehaviour
         foreach (GameObject ficha in fichas)
         {
             // recorremos todas las fichas quitando el elemento y la selección
-            this.QuitaMaterial(ficha);
-            this.PintaBlanco(ficha);
+            CambiaObjeto.QuitaMaterial(ficha);
+            CambiaObjeto.PintaBlanco(ficha);
         }
 
         // Inicializamos el elemento seleccionado
         ElementoSeleccionado.SetElementoSeleccionado(0);
         // Limpiamos la selección de elemento
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
 
     }
 
@@ -50,7 +54,7 @@ public class LimpiaSeleccion : MonoBehaviour
     {
         GameObject[] fichas;
 
-        // Pone a 0 todos los valores de las fichas del jugador 2
+        // Pone a 0 los valores de las fichas del jugador 2 de la cara acual
         FichaSeleccionada.InicializaFichasJugador2();
         // Indica como desmarcadas todas las fichas del jugador 2
         FichaSeleccionada.InicializaFichasSeleccionadas();
@@ -61,53 +65,43 @@ public class LimpiaSeleccion : MonoBehaviour
         foreach (GameObject ficha in fichas)
         {
             // recorremos todas las fichas quitando el elemento y la selección
-            this.QuitaMaterial(ficha);
-            this.PintaGris(ficha);
+            CambiaObjeto.QuitaMaterial(ficha);
+            CambiaObjeto.PintaGris(ficha);
         }
 
         // Inicializamos el elemento seleccionado
         ElementoSeleccionado.SetElementoSeleccionado(0);
         // Limpiamos la selección de elemento
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
-        this.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Fuego"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Agua"));
+        CambiaObjeto.PintaBlanco(GameObject.FindGameObjectWithTag("Madera"));
 
     }
 
-    // Quita el material que hace referencia al elemento de un objeto
-    private void QuitaMaterial(GameObject objeto)
+    // Borramos las asignaciones del jugador 1
+    public void CancelarJugador1()
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = null;
-            r.material = m;
-        }
+        // Pone a 0 todos los valores de las fichas de los jugadores
+        FichaSeleccionada.SetCara(0);
+        FichaSeleccionada.InicializaFichasJugador1();
+        FichaSeleccionada.SetCara(1);
+        FichaSeleccionada.InicializaFichasJugador1();
+        // Indica como desmarcadas todas las fichas y elementos
+        FichaSeleccionada.InicializaFichasSeleccionadas();
+        ElementoSeleccionado.SetElementoSeleccionado(0);
     }
 
-    // Pone el objeto de color blanco
-    private void PintaBlanco(GameObject objeto)
+    // Borramos las asignaciones del jugador 2
+    public void CancelarJugador2()
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.white;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color gris
-    private void PintaGris(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.grey;
-            r.material = m;
-        }
+        // Pone a 0 todos los valores de las fichas de los jugadores
+        FichaSeleccionada.SetCara(0);
+        FichaSeleccionada.InicializaFichasJugador2();
+        FichaSeleccionada.SetCara(1);
+        FichaSeleccionada.InicializaFichasJugador2();
+        // Indica como desmarcadas todas las fichas y elementos
+        FichaSeleccionada.InicializaFichasSeleccionadas();
+        ElementoSeleccionado.SetElementoSeleccionado(0);
     }
 
 }

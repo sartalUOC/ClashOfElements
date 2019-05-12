@@ -9,6 +9,11 @@ TagManager:
   - Madera
   - FichasJugador1
   - FichasJugador2
+  - BanderaJugador1
+  - BanderaJugador2
+  - Girar
+  - Bandera
+  - Casilla
   layers:
   - Default
   - TransparentFX

@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class FichaSeleccionada : MonoBehaviour
 {
-
     // Para guardar que fichas ya se han seleccionado
     static protected int[] fichasSeleccionadas = new int[9];
     static protected int totalFichasSeleccionadas = 0;
     // Guarda la posición y elemento de cada ficha
-    static protected int[,] fichasJugador1 = new int[9,4]; //x, y, z y elemento
-    static protected int[,] fichasJugador2 = new int[9, 4]; //x, y, z y elemento
+    static protected int[,,] fichasJugadores = new int[2, 9, 2]; //jugador, elemento y cara
+    // Cara que estamos seleccionando
+    static protected int cara; // 0 o 1
+    // Jugador que está seleccionando fichas
+    static protected int jugador; // 0 o 1
 
-    // Asignación de texturas posibles de las fichas
-    public Texture texturaMadera;
-    public Texture texturaAgua;
-    public Texture texturaFuego;
-    
     // Comportamiento al pinchar
     private void OnMouseUp()
     {
@@ -27,96 +25,107 @@ public class FichaSeleccionada : MonoBehaviour
             // Si la ficha no estaba seleccionada la marcamos de verde, si ya estaba seleccionada la ponemos blanca
             if (fichasSeleccionadas[this.GetComponent<numFichaJugador>().idFicha-1] == 0)
             {
-                this.PintaVerde(this.gameObject);
+                if (FichaSeleccionada.GetJugador() == 1 && FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(),this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] >0)
+                {
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 1)
+                    {
+                        CambiaObjeto.AsignaFuegoBlanco(this.gameObject);
+                    }
+
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 2)
+                    {
+                        CambiaObjeto.AsignaAguaBlanca(this.gameObject);
+                    }
+
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 3)
+                    {
+                        CambiaObjeto.AsignaMaderaBlanca(this.gameObject);
+                    }
+                }
+
+                CambiaObjeto.PintaVerde(this.gameObject);
                 fichasSeleccionadas[this.GetComponent<numFichaJugador>().idFicha-1] = 1;
                 totalFichasSeleccionadas++;
             }
             else
             {
-                if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador1")
+                if (FichaSeleccionada.GetJugador() == 0)
                 {
-                    this.PintaBlanco(this.gameObject);
+                    CambiaObjeto.PintaBlanco(this.gameObject);
                 }
-                if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
+                if (FichaSeleccionada.GetJugador() == 1 && FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.cara] == 0)
                 {
-                    this.PintaGris(this.gameObject);
+                    CambiaObjeto.PintaGris(this.gameObject);
                 }
+                if (FichaSeleccionada.GetJugador() == 1 && FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.cara] > 0)
+                {
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 1)
+                    {
+                        CambiaObjeto.AsignaFuegoNegro(this.gameObject);
+                    }
+
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 2)
+                    {
+                        CambiaObjeto.AsignaAguaNegra(this.gameObject);
+                    }
+
+                    if (FichaSeleccionada.fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] == 3)
+                    {
+                        CambiaObjeto.AsignaMaderaNegra(this.gameObject);
+                    }
+                }
+
                 fichasSeleccionadas[this.GetComponent<numFichaJugador>().idFicha-1] = 0;
                 totalFichasSeleccionadas--;
             }
-
-            //Debug.Log("Click! en ficha");
 
         }
         else
         // Si hay un elemento seleccionado, cambiaremos el material de la ficha
         {
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador1")
+            // Si la ficha ya tiene ese elemento se lo quitaremos
+            if (ElementoSeleccionado.GetElementoSeleccionado() == fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()])
             {
-                // Si la ficha ya tiene ese elemento se lo quitaremos
-                if (ElementoSeleccionado.GetElementoSeleccionado() == fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 3])
-                {
-                    this.QuitaMaterial(this.gameObject);
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 0] = 0;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 1] = 0;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 2] = 0;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 3] = 0;
-                }
-                else // Si la ficha no tiene ese elemento, le asignaremos el elemento seleccionado independientemente del elemento que tuviera la ficha anteriormente
-                {
-                    if (ElementoSeleccionado.GetElementoSeleccionado() == 1)
-                    {
-                        this.AsignaFuego(this.gameObject);
-                    }
-
-                    if (ElementoSeleccionado.GetElementoSeleccionado() == 2)
-                    {
-                        this.AsignaAgua(this.gameObject);
-                    }
-
-                    if (ElementoSeleccionado.GetElementoSeleccionado() == 3)
-                    {
-                        this.AsignaMadera(this.gameObject);
-                    }
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 0] = (int)this.gameObject.transform.position.x;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 1] = (int)this.gameObject.transform.position.y;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 2] = (int)this.gameObject.transform.position.z;
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 3] = ElementoSeleccionado.GetElementoSeleccionado();
-                }
+                CambiaObjeto.QuitaMaterial(this.gameObject);
+                fichasJugadores[FichaSeleccionada.GetJugador(), this.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] = 0;
             }
-            // repetimos para el jugador 2 si estamos en la escena correspondiente
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
+            else // Si la ficha no tiene ese elemento, le asignaremos el elemento seleccionado independientemente del elemento que tuviera la ficha anteriormente
             {
-                if (ElementoSeleccionado.GetElementoSeleccionado() == fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 3])
-                {
-                    this.QuitaMaterial(this.gameObject);
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 0] = 0;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 1] = 0;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 2] = 0;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 3] = 0;
-                }
-                else
+                if (FichaSeleccionada.GetJugador() == 0)
                 {
                     if (ElementoSeleccionado.GetElementoSeleccionado() == 1)
                     {
-                        this.AsignaFuego(this.gameObject);
+                        CambiaObjeto.AsignaFuegoBlanco(this.gameObject);
                     }
 
                     if (ElementoSeleccionado.GetElementoSeleccionado() == 2)
                     {
-                        this.AsignaAgua(this.gameObject);
+                        CambiaObjeto.AsignaAguaBlanca(this.gameObject);
                     }
 
                     if (ElementoSeleccionado.GetElementoSeleccionado() == 3)
                     {
-                        this.AsignaMadera(this.gameObject);
+                        CambiaObjeto.AsignaMaderaBlanca(this.gameObject);
                     }
-                    fichasJugador1[this.GetComponent<numFichaJugador>().idFicha - 1, 0] = (int)this.gameObject.transform.position.x;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 1] = (int)this.gameObject.transform.position.y;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 2] = (int)this.gameObject.transform.position.z;
-                    fichasJugador2[this.GetComponent<numFichaJugador>().idFicha - 1, 3] = ElementoSeleccionado.GetElementoSeleccionado();
-
                 }
+                if (FichaSeleccionada.GetJugador() == 1)
+                {
+                    if (ElementoSeleccionado.GetElementoSeleccionado() == 1)
+                    {
+                        CambiaObjeto.AsignaFuegoNegro(this.gameObject);
+                    }
+
+                    if (ElementoSeleccionado.GetElementoSeleccionado() == 2)
+                    {
+                        CambiaObjeto.AsignaAguaNegra(this.gameObject);
+                    }
+
+                    if (ElementoSeleccionado.GetElementoSeleccionado() == 3)
+                    {
+                        CambiaObjeto.AsignaMaderaNegra(this.gameObject);
+                    }
+                }
+                FichaSeleccionada.SetFichaJugador(this.gameObject);
             }
         }
     }
@@ -133,34 +142,16 @@ public class FichaSeleccionada : MonoBehaviour
         return totalFichasSeleccionadas;
     }
 
-    // devuelve las fichas del jugador 1
-    public static int[,] GetFichasJugador1()
+    // devuelve las fichas de los jugadores
+    public static int[,,] GetFichasJugadores()
     {
-        return fichasJugador1;
+        return fichasJugadores;
     }
 
-    // devuelve las fichas del jugador 2
-    public static int[,] GetFichasJugador2()
+    // Guarda los datos de una ficha para el jugador
+    public static void SetFichaJugador(GameObject obj)
     {
-        return fichasJugador2;
-    }
-
-    // Guarda los datos de una ficha (posición y elemento) para el jugador 1
-    public static void SetFichasJugador1(GameObject obj)
-    {
-        fichasJugador1[obj.GetComponent<numFichaJugador>().idFicha - 1, 0] = (int)obj.transform.position.x;
-        fichasJugador1[obj.GetComponent<numFichaJugador>().idFicha - 1, 1] = (int)obj.transform.position.y;
-        fichasJugador1[obj.GetComponent<numFichaJugador>().idFicha - 1, 2] = (int)obj.transform.position.z;
-        fichasJugador1[obj.GetComponent<numFichaJugador>().idFicha - 1, 3] = ElementoSeleccionado.GetElementoSeleccionado();
-    }
-
-    // Guarda los datos de una ficha (posición y elemento) para el jugador 2
-    public static void SetFichasJugador2(GameObject obj)
-    {
-        fichasJugador2[obj.GetComponent<numFichaJugador>().idFicha - 1, 0] = (int)obj.transform.position.x;
-        fichasJugador2[obj.GetComponent<numFichaJugador>().idFicha - 1, 1] = (int)obj.transform.position.y;
-        fichasJugador2[obj.GetComponent<numFichaJugador>().idFicha - 1, 2] = (int)obj.transform.position.z;
-        fichasJugador2[obj.GetComponent<numFichaJugador>().idFicha - 1, 3] = ElementoSeleccionado.GetElementoSeleccionado();
+        fichasJugadores[FichaSeleccionada.GetJugador(),obj.GetComponent<numFichaJugador>().idFicha - 1, FichaSeleccionada.GetCara()] = ElementoSeleccionado.GetElementoSeleccionado();
     }
 
     // Inicializa las posiciones y elementos de las fichas del jugador 1
@@ -168,10 +159,7 @@ public class FichaSeleccionada : MonoBehaviour
     {
         for (int i = 0; i < 9; i++)
         {
-            fichasJugador1[i, 0] = 0;
-            fichasJugador1[i, 1] = 0;
-            fichasJugador1[i, 2] = 0;
-            fichasJugador1[i, 3] = 0;
+            fichasJugadores[0,i, FichaSeleccionada.cara] = 0;
         }
     }
 
@@ -180,10 +168,7 @@ public class FichaSeleccionada : MonoBehaviour
     {
         for (int i = 0; i < 9; i++)
         {
-            fichasJugador2[i, 0] = 0;
-            fichasJugador2[i, 1] = 0;
-            fichasJugador2[i, 2] = 0;
-            fichasJugador2[i, 3] = 0;
+            fichasJugadores[1,i, FichaSeleccionada.cara] = 0;
         }
     }
 
@@ -197,105 +182,28 @@ public class FichaSeleccionada : MonoBehaviour
         totalFichasSeleccionadas = 0;
     }
 
-    // Quita el material que hace referencia al elemento de un objeto
-    private void QuitaMaterial(GameObject objeto)
+    // Set cara
+    public static void SetCara(int cara)
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = null;
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
-            {
-                m.color = Color.grey;
-            }
-            r.material = m;
-        }
+        FichaSeleccionada.cara = cara;
     }
 
-    // Pone el material de madera al objeto
-    private void AsignaMadera(GameObject objeto)
+    // Get cara
+    public static int GetCara()
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture=texturaMadera;
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
-            {
-                m.color = Color.white;
-            }
-            r.material = m;
-        }
+        return FichaSeleccionada.cara;
     }
 
-    // Pone el material de agua al objeto
-    private void AsignaAgua(GameObject objeto)
+    // Set jugador
+    public static void SetJugador(int jugador)
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = texturaAgua;
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
-            {
-                m.color = Color.white;
-            }
-            r.material = m;
-        }
+        FichaSeleccionada.jugador = jugador;
     }
 
-    // Pone el material de fuego al objeto
-    private void AsignaFuego(GameObject objeto)
+    // Get jugador
+    public static int GetJugador()
     {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = texturaFuego;
-            if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
-            {
-                m.color = Color.white;
-            }
-            r.material = m;
-        }
+        return FichaSeleccionada.jugador;
     }
-
-    // Pone el objeto de color verde
-    private void PintaVerde(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.green;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color blanco
-    private void PintaBlanco(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.white;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color gris
-    private void PintaGris(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.grey;
-            r.material = m;
-        }
-    }
-
 
 }

@@ -9,89 +9,56 @@ public class IniciaSeleccion : MonoBehaviour
     void Start()
     {
         GameObject[] fichas = null;
-        int[,] datosFichas = null;
+        int[,,] datosFichas = null;
         // Añadimos al array todas las fichas del jugador 1
-        if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador1")
+        if (FichaSeleccionada.GetJugador() == 0)
         {
             fichas = GameObject.FindGameObjectsWithTag("FichasJugador1");
-            datosFichas = FichaSeleccionada.GetFichasJugador1();
+            datosFichas = FichaSeleccionada.GetFichasJugadores();
+            foreach (GameObject ficha in fichas)
+            {
+                // recorremos todas las fichas asignando el elemento y añadiendo a las fichas seleccionadas
+                if (datosFichas[FichaSeleccionada.GetJugador(),(ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 1)
+                {
+                    CambiaObjeto.AsignaFuegoBlanco(ficha);
+                }
+
+                if (datosFichas[FichaSeleccionada.GetJugador(), (ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 2)
+                {
+                    CambiaObjeto.AsignaAguaBlanca(ficha);
+                }
+
+                if (datosFichas[FichaSeleccionada.GetJugador(), (ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 3)
+                {
+                    CambiaObjeto.AsignaMaderaBlanca(ficha);
+                }
+
+            }
         }
         // Añadimos al array todas las fichas del jugador 2
-        if (SceneManager.GetActiveScene().name == "Selector Fichas Jugador2")
+        if (FichaSeleccionada.GetJugador() == 1)
         {
             fichas = GameObject.FindGameObjectsWithTag("FichasJugador2");
-            datosFichas = FichaSeleccionada.GetFichasJugador2();
-        }
-
-        foreach (GameObject ficha in fichas)
-        {
-            // recorremos todas las fichas asignando el elemento y añadiendo a las fichas seleccionadas
-            if (datosFichas[(ficha.GetComponent<numFichaJugador>().idFicha) - 1, 3] == 1)
+            datosFichas = FichaSeleccionada.GetFichasJugadores();
+            foreach (GameObject ficha in fichas)
             {
-                this.AsignaFuego(ficha);
-                this.PintaBlanco(ficha);
+                // recorremos todas las fichas asignando el elemento y añadiendo a las fichas seleccionadas
+                if (datosFichas[FichaSeleccionada.GetJugador(), (ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 1)
+                {
+                    CambiaObjeto.AsignaFuegoNegro(ficha);
+                }
+
+                if (datosFichas[FichaSeleccionada.GetJugador(), (ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 2)
+                {
+                    CambiaObjeto.AsignaAguaNegra(ficha);
+                }
+
+                if (datosFichas[FichaSeleccionada.GetJugador(),(ficha.GetComponent<numFichaJugador>().idFicha) - 1, FichaSeleccionada.GetCara()] == 3)
+                {
+                    CambiaObjeto.AsignaMaderaNegra(ficha);
+                }
+
             }
-
-            if (datosFichas[(ficha.GetComponent<numFichaJugador>().idFicha) - 1, 3] == 2)
-            {
-                this.AsignaAgua(ficha);
-                this.PintaBlanco(ficha);
-            }
-
-            if (datosFichas[(ficha.GetComponent<numFichaJugador>().idFicha) - 1, 3] == 3)
-            {
-                this.AsignaMadera(ficha);
-                this.PintaBlanco(ficha);
-            }
-
-         }
-    }
-
-    // Pone el material de madera al objeto
-    private void AsignaMadera(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = objeto.GetComponent<FichaSeleccionada>().texturaMadera;
-            r.material = m;
         }
     }
-
-    // Pone el material de agua al objeto
-    private void AsignaAgua(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = objeto.GetComponent<FichaSeleccionada>().texturaAgua;
-            r.material = m;
-        }
-    }
-
-    // Pone el material de fuego al objeto
-    private void AsignaFuego(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.mainTexture = objeto.GetComponent<FichaSeleccionada>().texturaFuego;
-            r.material = m;
-        }
-    }
-
-    // Pone el objeto de color blanco
-    private void PintaBlanco(GameObject objeto)
-    {
-        Renderer[] rs = objeto.GetComponentsInChildren<Renderer>();
-        foreach (Renderer r in rs)
-        {
-            Material m = r.material;
-            m.color = Color.white;
-            r.material = m;
-        }
-    }
-}
+ }

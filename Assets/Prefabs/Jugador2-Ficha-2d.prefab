@@ -155,6 +155,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idFicha: 0
+  texturaMaderaBlanca: {fileID: 2800000, guid: da68bab37020f9f46b430b7b83d8ad56, type: 3}
+  texturaAguaBlanca: {fileID: 2800000, guid: 4b2860b3d472fcf4e88fa8dadf76b8b8, type: 3}
+  texturaFuegoBlanca: {fileID: 2800000, guid: 91dd0cee8bd418245be7929d794404de, type: 3}
+  texturaMaderaNegra: {fileID: 2800000, guid: 14c26186e1721b4458118e28e63013e6, type: 3}
+  texturaAguaNegra: {fileID: 2800000, guid: d6393f84a8da010488fe56937d6d7786, type: 3}
+  texturaFuegoNegra: {fileID: 2800000, guid: 479d1cc8b090b7c43829804d5aca98bd, type: 3}
 --- !u!114 &7056119435974627455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +173,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073d5d6e05416aa48a891118589d20b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  texturaMadera: {fileID: 2800000, guid: 14c26186e1721b4458118e28e63013e6, type: 3}
-  texturaAgua: {fileID: 2800000, guid: d6393f84a8da010488fe56937d6d7786, type: 3}
-  texturaFuego: {fileID: 2800000, guid: 0465a74ad058ef2479bc441bbe042963, type: 3}
